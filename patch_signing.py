@@ -44,7 +44,9 @@ project_dict = {
     "spr": "SapphireRapids",
     "adl": "ADLpatch",
     "rkl": "IceLake",
-    "rpl": "ADLpatch"
+    "rpl": "ADLpatch",
+    "mtl": "MTLpatchRSA",
+    "lnl": "LNLMpatchRSA"
 }
 
 algo_dict = {
@@ -54,7 +56,9 @@ algo_dict = {
     "IceLake": "aes",
     "IceLakeX": "aes",
     "SapphireRapids": "aes",
-    "ADLpatch": "aes"
+    "ADLpatch": "aes",
+    "MTLpatchRSA": "aes",
+    "LNLMpatchRSA": "aes"
 }
 
 unix_proj_dict = {
@@ -71,6 +75,7 @@ unix_proj_dict = {
     "adl": 'setGLC -m ucode',
     "rkl": 'setCPCs',
     "rpl": 'setRPC'
+    "MTL": 'setRWC -m ucode'
 }
 
 site_prefix_dict = {
@@ -81,6 +86,9 @@ site_prefix_dict = {
     "sc8": r'\\sc8-samba.sc.intel.com'
 }
 
+dualsign_XMSS = ['mtl', 'gnr', 'lnl']
+
+core_also_need_encryption_project = ['lnl']
 
 def main():
     # check the script is running on python 3. if not, die
@@ -109,7 +117,7 @@ def main():
     module2 = "PPPE1"
     patch = "core"
     
-    while (1):
+    while 1:
         folder_path = input("Please enter UNIX path to patch directory:\n")
         folder_path = folder_path.strip()
         if folder_path == '':
@@ -150,7 +158,9 @@ def main():
         dot_patch_fp = os.path.join(folder_path,  patch_name + ".patch")
         m1_hash_fp = m1_fp.replace(".bin", "_encrypted_hash.bin")
         m2_hash_fp = m2_fp.replace(".bin", "_encrypted_hash.bin")
-        
+        # this will be needed only for projects that need to encrypt the core bin as well
+        patch_enc_fp = patch_fp.replace(".bin", "_encrypted.bin")
+
         # enter to the code sign dir
         code_sign_path = os.getenv('APPDATA') + '\\CSS_HOME\\Intel\\LT CSS\\Bin'
         if not os.path.isdir(os.getenv('APPDATA') + '\\CSS_HOME\\Intel\\LT CSS\\Bin'):  # check if CSS exist on the system
@@ -167,7 +177,7 @@ def main():
             # if we still didn't find any .patch file - error and exit:
             if not dot_patch_fp:
                 signal_error("could not find", dot_patch_fp)
-        
+
         # get target stepping, project and sign_id from patch_default.patch
         stepping = ""
         project = ""
@@ -247,6 +257,27 @@ def main():
         else:
             print("no ", module2, " exist, skipping encrypting it")
 
+        # if this is a project that needs also core encryption, encrypt it:
+        if project in core_also_need_encryption_project:
+            if os.path.isfile(patch_fp):
+                print("encrypting {0} module for {1}".format(patch, proj))
+                full_command = "codesign.exe --emencrypt --project {0} --input {1} --hashfile" \
+                               " {2} --algorithm {3} --password {4}".format(proj, patch_fp, patch_enc_fp, algo,
+                                                                            css_password)
+
+                command_result = ""
+                try:
+                    command_result = check_output(full_command)
+                except CalledProcessError as e:
+                    signal_error("Failed to sign {0}".format(patch), command_result + str(e.output))
+                print("Finished encrypting the core file (LNL forward) {0}".format(patch))
+            else:
+                signal_error("couldn't find the core path:", patch_fp)
+
+            # from now on only work on the encrypted file instead of the unencrypted:
+            patch_fp = patch_enc_fp
+
+
         if functionality == "PROD":
             print("finished encrypting the core")
             script_passed()
@@ -260,8 +291,14 @@ def main():
             patch_fp = patch_fp_no_xucode
 
         command_result = ""
-        full_command = "codesign.exe --wfsign --debug --project {0} --input {1} --password {2}".\
-            format(proj, patch_fp, css_password)
+        if project in dualsign_XMSS:
+            # assuming that project names for dual signing will be *RSA and *XMSS, so replacing RSA with XMSS will give the XMSS project
+            proj_xmss = proj.replace('RSA','XMSS')
+            full_command = "codesign.exe --dual-sign --debug --projects {0} {1} --input {2} --password {3}".\
+            format(proj, proj_xmss, patch_fp, css_password)
+        else:
+            full_command = "codesign.exe --wfsign --debug --project {0} --input {1} --password {2}".\
+                format(proj, patch_fp, css_password)
         try:
             command_result = check_output(full_command)
         except CalledProcessError as e:
