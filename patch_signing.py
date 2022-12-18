@@ -36,14 +36,14 @@ project_dict = {
     "CFL": "Skylake",
     "KBL": "Skylake",
     "CML": "Skylake",
-    "icl": "IceLake",
-    "icx": "IceLakeX",
     "skx": "SKX",
     "cnl": "CNL",
-    "skx": "SKX",
+    "icl": "IceLake",
+    "icx": "IceLakeX",
+    "rkl": "IceLake",
+    "tgl": "TigerLake",
     "spr": "SapphireRapids",
     "adl": "ADLpatch",
-    "rkl": "IceLake",
     "rpl": "ADLpatch",
     "mtl": "MTLpatchRSA",
     "lnl": "LNLMpatchRSA"
@@ -55,6 +55,7 @@ algo_dict = {
     "CNL": "rc4",
     "IceLake": "aes",
     "IceLakeX": "aes",
+    "TigerLake": "aes",
     "SapphireRapids": "aes",
     "ADLpatch": "aes",
     "MTLpatchRSA": "aes",
@@ -74,8 +75,8 @@ unix_proj_dict = {
     "spr": 'setGLC -m ucode',
     "adl": 'setGLC -m ucode',
     "rkl": 'setCPCs',
-    "rpl": 'setRPC'
-    "MTL": 'setRWC -m ucode'
+    "rpl": 'setRPC',
+    "mtl": 'setRWC -m ucode'
 }
 
 site_prefix_dict = {
