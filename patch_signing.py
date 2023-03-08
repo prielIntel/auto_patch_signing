@@ -46,7 +46,8 @@ project_dict = {
     "adl": "ADLpatch",
     "rpl": "ADLpatch",
     "mtl": "MTLpatchRSA",
-    "lnl": "LNLMpatchRSA"
+    "lnl": "LNLMpatchRSA",
+    "gnr": "GNRpatchRSA",
 }
 
 algo_dict = {
@@ -59,7 +60,8 @@ algo_dict = {
     "SapphireRapids": "aes",
     "ADLpatch": "aes",
     "MTLpatchRSA": "aes",
-    "LNLMpatchRSA": "aes"
+    "GNRpatchRSA": "aes",
+    "LNLMpatchRSA": "aes",
 }
 
 unix_proj_dict = {
