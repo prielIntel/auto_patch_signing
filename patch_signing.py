@@ -48,6 +48,8 @@ project_dict = {
     "mtl": "MTLpatchRSA",
     "lnl": "LNLMpatchRSA",
     "gnr": "GNRpatchRSA",
+    "arlh": "ARLpatchRSA",
+    "arls": "ARLpatchRSA",
 }
 
 algo_dict = {
@@ -62,6 +64,7 @@ algo_dict = {
     "MTLpatchRSA": "aes",
     "GNRpatchRSA": "aes",
     "LNLMpatchRSA": "aes",
+    "ARLpatchRSA": "aes",
 }
 
 unix_proj_dict = {
@@ -78,20 +81,23 @@ unix_proj_dict = {
     "adl": 'setGLC -m ucode',
     "rkl": 'setCPCs',
     "rpl": 'setRPC',
-    "mtl": 'setRWC -m ucode'
+    "mtl": 'setRWC -m ucode',
+    "LNL": 'setLNC -m ucode',
+    "ARLS": 'setLNC -m ucode',
 }
 
 site_prefix_dict = {
     "iil": r'\\isamba.iil.intel.com',
     "sc": r'\\samba.sc.intel.com',
+    "sc1": r'\\sc1-samba.sc.intel.com',
     "iil2": r'\\ismb013.iil.intel.com',
     "pdx": r'\\pdx-samba.sc.intel.com',
     "sc8": r'\\sc8-samba.sc.intel.com'
 }
 
-dualsign_XMSS = ['mtl', 'gnr', 'lnl']
+dualsign_XMSS = ['mtl', 'gnr', 'lnl', 'arls', 'arlh']
 
-core_also_need_encryption_project = ['lnl']
+core_also_need_encryption_project = ['lnl', 'arls', 'arlh']
 
 def main():
     # check the script is running on python 3. if not, die
