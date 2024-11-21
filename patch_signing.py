@@ -101,7 +101,7 @@ site_prefix_dict = {
 
 dualsign_XMSS = ['mtl', 'gnr', 'lnl', 'arls', 'arlh', 'ptl','wcl']
 
-core_also_need_encryption_project = ['lnl', 'arls', 'arlh']
+core_also_need_encryption_project = ['lnl', 'arls', 'arlh', 'ptl','wcl']
 
 def main():
     # check the script is running on python 3. if not, die
