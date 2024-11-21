@@ -50,6 +50,8 @@ project_dict = {
     "gnr": "GNRpatchRSA",
     "arlh": "ARLpatchRSA",
     "arls": "ARLpatchRSA",
+    "ptl": "PTLpatchRSA",
+    "wcl": "PTLpatchRSA",
 }
 
 algo_dict = {
@@ -65,6 +67,7 @@ algo_dict = {
     "GNRpatchRSA": "aes",
     "LNLMpatchRSA": "aes",
     "ARLpatchRSA": "aes",
+    "PTLpatchRSA": "aes",
 }
 
 unix_proj_dict = {
@@ -84,6 +87,7 @@ unix_proj_dict = {
     "mtl": 'setRWC -m ucode',
     "LNL": 'setLNC -m ucode',
     "ARLS": 'setLNC -m ucode',
+    "PTL": 'setCGC -m ucode',
 }
 
 site_prefix_dict = {
@@ -95,7 +99,7 @@ site_prefix_dict = {
     "sc8": r'\\sc8-samba.sc.intel.com'
 }
 
-dualsign_XMSS = ['mtl', 'gnr', 'lnl', 'arls', 'arlh']
+dualsign_XMSS = ['mtl', 'gnr', 'lnl', 'arls', 'arlh', 'ptl','wcl']
 
 core_also_need_encryption_project = ['lnl', 'arls', 'arlh']
 
